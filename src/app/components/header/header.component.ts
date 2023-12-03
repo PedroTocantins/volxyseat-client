@@ -9,17 +9,21 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
   username: string | null = null;
   isAuthenticated: boolean = false;
   isMenuOpen = false;
   isWideScreen = window.innerWidth > 930;
-  teste : string = ""
+  teste: string = '';
 
-
-  constructor(private logOutService: LogOutService, private tranService: TransactionsService, private subService: SubscriptionService,   private router: Router) {
+  constructor(
+    private logOutService: LogOutService,
+    private tranService: TransactionsService,
+    private subService: SubscriptionService,
+    private router: Router
+  ) {
     this.checkUserLogin();
     this.getSubscriptionId();
   }
@@ -30,7 +34,6 @@ export class HeaderComponent {
     this.isAuthenticated = !!token;
   }
 
-
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
@@ -38,42 +41,41 @@ export class HeaderComponent {
   logout() {
     this.logOutService.logout().subscribe(
       () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
+        localStorage.clear();
         this.username = null;
         this.isAuthenticated = false;
         this.router.navigate(['/']);
       },
-      error => {
+      (error) => {
         console.error('Erro ao fazer logout:', error);
       }
     );
   }
 
   getTransaction(): Observable<any> {
-    return this.tranService.getById(localStorage.getItem("transactionId"));
+    return this.tranService.getById(localStorage.getItem('transactionId'));
   }
-
 
   getSubscriptionId() {
-    this.getTransaction().pipe(
-      switchMap((transaction: any) => {
-        console.log(transaction.subscription);
-        return this.getSubscriptionById(transaction.subscription);
-      })
-    ).subscribe(
-      (result: any) => {
-        this.teste = result.type;
-        console.log(result);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    this.getTransaction()
+      .pipe(
+        switchMap((transaction: any) => {
+          console.log(transaction.subscription);
+          return this.getSubscriptionById(transaction.subscription);
+        })
+      )
+      .subscribe(
+        (result: any) => {
+          this.teste = result.type;
+          console.log(result);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
   }
-  
+
   getSubscriptionById(id: string): Observable<any> {
     return this.subService.getById(id);
   }
 }
-

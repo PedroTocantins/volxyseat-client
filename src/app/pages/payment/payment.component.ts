@@ -24,7 +24,6 @@ export class PaymentComponent {
     this.transaction = this.tranService
       .getById(localStorage.getItem('transactionId'))
       .subscribe((response: any) => {
-        // localStorage.setItem('clientId', response.client);
         return response;
       });
   }
@@ -57,7 +56,7 @@ export class PaymentComponent {
     this.tranService.post(this.newTransaction).subscribe(
       (response: any) => {
         localStorage.setItem('transactionId', response.id);
-        this.router.navigate(['/payment']);
+        this.router.navigate(['/']);
         return response;
       },
       (error: any) => {
