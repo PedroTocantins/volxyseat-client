@@ -14,11 +14,14 @@ export class PaymentComponent {
   planoSelecionado: Subscription;
   username: string | null = null;
   transaction: any;
+  planId: string = '';
 
   ngOnInit() {
     this.subService.planoSelecionado.subscribe((plano: Subscription) => {
       this.planoSelecionado = plano;
-      localStorage.setItem('subscriptionId', this.planoSelecionado.id);
+      console.log(plano);
+      this.planId = this.planoSelecionado.id;
+      localStorage.setItem('subId', this.planoSelecionado.id);
     });
 
     this.transaction = this.tranService
@@ -41,15 +44,14 @@ export class PaymentComponent {
   }
 
   public newTransaction: Transaction = new Transaction();
-  public subId: string | null = localStorage.getItem('subscriptionId');
   public clientId: string | null = localStorage.getItem('clientId');
 
   insertPayment() {
     console.log(this.clientId);
-    console.log(this.subId);
-    if (this.subId != null && this.clientId != null) {
+    console.log(this.planId);
+    if (this.planId !== null && this.clientId !== null) {
       this.newTransaction.client = this.clientId;
-      this.newTransaction.subscription = this.subId;
+      this.newTransaction.subscription = this.planId;
       this.newTransaction.termInDays = this.planoSelecionado.termInDays;
     }
 

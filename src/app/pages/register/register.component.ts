@@ -22,6 +22,7 @@ export class RegisterComponent {
 
 
   registerAndLogin() {
+    console.log(this.newRegister)
     this.registerService.post(this.newRegister).subscribe(
       (response: any) => {
         console.log('Temos uma nova empresa registrada!', response);
